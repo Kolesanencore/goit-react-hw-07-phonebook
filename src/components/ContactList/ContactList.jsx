@@ -6,15 +6,13 @@ import {
   useDeleteContactMutation,
 } from 'Redux/contactsSlice';
 
+import { toast } from 'react-toastify';
+
 import { RiDeleteBinLine } from 'react-icons/ri';
 
 import { Button, List, Item } from '../ContactList/ContactList.styled';
 
 export const Contacts = () => {
-  const removeContactId = id => {
-    removeContact(id);
-  };
-
   const { data: contacts = [] } = useGetContactsQuery();
   const [removeContact] = useDeleteContactMutation();
 
@@ -25,6 +23,15 @@ export const Contacts = () => {
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   })();
+
+  const removeContactId = async id => {
+    try {
+      await removeContact(id);
+      toast.success('Contact successfully deleted');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
 
   return (
     <List>
